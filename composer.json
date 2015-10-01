@@ -1,0 +1,5 @@
+{
+    "requre": {
+        "rmccue/requests": ">=1.0"
+    }
+}
