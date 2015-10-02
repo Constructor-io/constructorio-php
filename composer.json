@@ -6,8 +6,5 @@
     "require": {
         "rmccue/requests": ">=1.0",
         "phpunit/phpunit": "4.8.*"
-    },
-    "require-dev": {
-        "php-vcr/php-vcr": "^1.2"
     }
 }
