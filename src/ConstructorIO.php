@@ -4,176 +4,156 @@ require('requests');
 
 class ConstructorIO {
 
-  public function __construct($apiToken, $autocompleteKey, $protocol='http', $host=something) {
-        //python:
-        //self._api_token = api_token
-        //self._autocomplete_key = autocomplete_key
-        //self._protocol = protocol
-        //self._host = host
+  private $apiToken;
+  private $autocompleteKey;
+  private $protocol;
+  private $host;
+
+  public function __construct($apiToken, $autocompleteKey, $protocol='http', $host="ac.cnstrc.com") {
+    $this->apiToken = $apiToken;
+    $this->autocompleteKey = $autocompleteKey;
+    $this->protocol = $protocol;
+    $this->host = $host;
   }
 
-  private function _serializeParams($params) {
-        //python:
-        //return urllib.urlencode(params)
+  private function serializeParams($params) {
+    // just to make the internal API concordant with other clients
+    return urlencode($params);
   }
 
-  private function _makeUrl($endpoint, $params=array()) {
-        //python:
-        //if not params:
-        //    params = {}
-        //params["autocomplete_key"] = self._autocomplete_key
-        //return "{0}://{1}/{2}?{3}".format(self._protocol, self._host, endpoint, self._serialize_params(params))
+  private function makeUrl($endpoint, $params=array()) {
+    $params["autocomplete_key"] = $this->autocompleteKey;
+    return sprintf("%s://%s/%s?%s", $this->protocol, $this->host, $this->endpoint, $this->serializeParams($params));
   }
 
   public function query($queryStr) {
-        //python:
-        //url = self._make_url("autocomplete/" + query_str)
-        //resp = requests.get(url)
-        //if resp.status_code != 200:
-        //    raise IOError(resp.text)
-        //else:
-        //    return resp.json()
+    $url = $this->makeUrl("autocomplete/" + $queryStr);
+    $resp = Requests::get($url);
+    if ($resp->status_code !== 200) {
+      throw new Exception($resp->text);
+    } else {
+      return $resp->json;
+    }
   }
 
-  public function add($item_name, $autocomplete_section, $kwargs) {
-        //python:
-        //params = {"item_name": item_name, "autocomplete_section": autocomplete_section}
-        //if "suggested_score" in kwargs:
-        //    params["suggested_score"] = kwargs["suggested_score"]
-        //if "keywords" in kwargs:
-        //    params["keywords"] = kwargs["keywords"]
-        //if "description" in kwargs:
-        //    params["description"] = kwargs["description"]
-        //if "url" in kwargs:
-        //    params["url"] = kwargs["url"]
-        //if "image_url" in kwargs:
-        //    params["image_url"] = kwargs["image_url"]
-        //url = self._make_url("v1/item")
-        //if not self._api_token:
-        //    raise IOError("You must have an API token to use the Add method!")
-        //resp = requests.post(
-        //    url,
-        //    json=params,
-        //    auth=(self._api_token, "")
-        //)
-        //if resp.status_code != 204:
-        //    raise IOError(resp.text)
-        //else:
-        //    return True
+  public function add($item_name, $autocompleteSection, $kwargs) {
+    $params = array(
+      "item_name" => $item_name,
+      "autocomplete_section" => $autocompleteSection,
+    );
+    $params = array_merge($params, $kwargs);
+    $url = $this->makeUrl("v1/item");
+    if (!$this->apiToken) {
+      throw new Exception("You must have an API token to use the Add method!");
+    }
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this0->apiToken, ''));
+    $resp = Request::post($url, $headers, json_encode($params), $options);
+    if ($resp->status_code !== 204) {
+      throw new Exception($resp->text);
+    } else {
+      return True;
+    }
   }
 
-  public function remove($item_name, $autocomplete_section, $kwargs) {
-        //python
-        //params = {"item_name": item_name, "autocomplete_section": autocomplete_section}
-        //if "suggested_score" in kwargs:
-        //    params["suggested_score"] = kwargs["suggested_score"]
-        //if "keywords" in kwargs:
-        //    params["keywords"] = kwargs["keywords"]
-        //if "url" in kwargs:
-        //    params["url"] = kwargs["url"]
-        //url = self._make_url("v1/item")
-        //if not self._api_token:
-        //    raise IOError("You must have an API token to use the Remove method!")
-        //resp = requests.delete(
-        //    url,
-        //    json=params,
-        //    auth=(self._api_token, "")
-        //)
-        //if resp.status_code != 204:
-        //    raise IOError(resp.text)
-        //else:
-        //    return True
-  }
-  
-  public function modify($item_name, $autocomplete_section, $kwargs) {
-        //python
-        //params = {"item_name": item_name, "autocomplete_section": autocomplete_section}
-        //if "suggested_score" in kwargs:
-        //    params["suggested_score"] = kwargs["suggested_score"]
-        //if "keywords" in kwargs:
-        //    params["keywords"] = kwargs["keywords"]
-        //if "url" in kwargs:
-        //    params["url"] = kwargs["url"]
-        //url = self._make_url("v1/item")
-        //if not self._api_token:
-        //    raise IOError("You must have an API token to use the Modify method!")
-        //resp = requests.put(
-        //    url,
-        //    json=params,
-        //    auth=(self._api_token, "")
-        //)
-        //if resp.status_code != 204:
-        //    raise IOError(resp.text)
-        //else:
-        //    return True
+  public function remove($item_name, $autocompleteSection, $kwargs) {
+    $params = array(
+      "item_name" => $item_name,
+      "autocomplete_section" => $autocompleteSection,
+    );
+    $params = array_merge($params, $kwargs);
+    $url = $this->makeUrl("v1/item");
+    if (!$this->apiToken) {
+      throw new Exception("You must have an API token to use the Remove method!");
+    }
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this0->apiToken, ''));
+    $resp = Request::delete($url, $headers, json_encode($params), $options);
+    if ($resp->status_code !== 204) {
+      throw new Exception($resp->text);
+    } else {
+      return True;
+    }
   }
 
-  public function track_conversion($term, $autocomplete_section, $kwargs) {
-    //python:
-        //params = {
-        //    "term": term,
-        //    "autocomplete_section": autocomplete_section,
-        //}
-        //if "item" in kwargs:
-        //    params["item"] = kwargs["item"]
-        //url = self._make_url("v1/conversion")
-        //if not self._api_token:
-        //    raise IOError("You must have an API token to track conversions!")
-        //resp = requests.post(
-        //    url,
-        //    json=params,
-        //    auth=(self._api_token, "")
-        //)
-        //if resp.status_code != 204:
-        //    raise IOError(resp.text)
-        //else:
-        //    return True
+  public function modify($item_name, $autocompleteSection, $kwargs) {
+    $params = array(
+      "item_name" => $item_name,
+      "autocomplete_section" => $autocompleteSection,
+    );
+    $params = array_merge($params, $kwargs);
+    $url = $this->makeUrl("v1/item");
+    if (!$this->apiToken) {
+      throw new Exception("You must have an API token to use the Modify method!");
+    }
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this0->apiToken, ''));
+    $resp = Request::put($url, $headers, json_encode($params), $options);
+    if ($resp->status_code !== 204) {
+      throw new Exception($resp->text);
+    } else {
+      return True;
+    }
   }
-  
+
+  public function track_conversion($term, $autocompleteSection, $kwargs) {
+    $params = array(
+      "term" => $term,
+      "autocomplete_section" => $autocompleteSection
+    )
+    $params = array_merge($params, $kwargs);
+    $url = $this->makeUrl("v1/conversion");
+    if (!$this->apiToken) {
+      throw new Exception("You must have an API token to track conversions!");
+    }
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this0->apiToken, ''));
+    $resp = Request::post($url, $headers, json_encode($params), $options);
+    if ($resp->status_code !== 204) {
+      throw new Exception($resp->text);
+    } else {
+      return True;
+    }
+  }
+
   public function track_click_through($term, $autocomplete_section, $kwargs) {
-    //python
-        //params = {
-        //    "term": term,
-        //    "autocomplete_section": autocomplete_section,
-        //}
-        //if "item" in kwargs:
-        //    params["item"] = kwargs["item"]
-        //if "revenue" in kwargs:
-        //    params["revenue"] = kwargs["revenue"]
-        //url = self._make_url("v1/click_through")
-        //if not self._api_token:
-        //    raise IOError("You must have an API token to track click throughs!")
-        //resp = requests.post(
-        //    url,
-        //    json=params,
-        //    auth=(self._api_token, "")
-        //)
-        //if resp.status_code != 204:
-        //    raise IOError(resp.text)
-        //else:
-        //    return True
+    $params = array(
+      "term" => $term,
+      "autocomplete_section" => $autocompleteSection
+    )
+    $params = array_merge($params, $kwargs);
+    $url = $this->makeUrl("v1/click_through");
+    if (!$this->apiToken) {
+      throw new Exception("You must have an API token to track click-throughs!");
+    }
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this0->apiToken, ''));
+    $resp = Request::post($url, $headers, json_encode($params), $options);
+    if ($resp->status_code !== 204) {
+      throw new Exception($resp->text);
+    } else {
+      return True;
+    }
   }
-  
+
   public function track_search($term, $autocomplete_section, $kwargs) {
-    //python
-        //params = {
-        //    "term": term,
-        //    "autocomplete_section": autocomplete_section,
-        //}
-        //if "num_results" in kwargs:
-        //    params["num_results"] = kwargs["num_results"]
-        //url = self._make_url("v1/search")
-        //if not self._api_token:
-        //    raise IOError("You must have an API token to track searches!")
-        //resp = requests.post(
-        //    url,
-        //    json=params,
-        //    auth=(self._api_token, "")
-        //)
-        //if resp.status_code != 204:
-        //    raise IOError(resp.text)
-        //else:
-        //    return True
+    $params = array(
+      "term" => $term,
+      "autocomplete_section" => $autocompleteSection
+    )
+    $params = array_merge($params, $kwargs);
+    $url = $this->makeUrl("v1/search");
+    if (!$this->apiToken) {
+      throw new Exception("You must have an API token to track searchs!");
+    }
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this0->apiToken, ''));
+    $resp = Request::post($url, $headers, json_encode($params), $options);
+    if ($resp->status_code !== 204) {
+      throw new Exception($resp->text);
+    } else {
+      return True;
+    }
   }
 }
 ?>
