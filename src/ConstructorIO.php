@@ -88,7 +88,7 @@ class ConstructorIO {
       throw new Exception("You must have an API token to use the Modify method!");
     }
     $headers = array('Content-Type' => 'application/json');
-    $options = array('auth' => array($this0->apiToken, ''));
+    $options = array('auth' => array($this->apiToken, ''));
     $resp = Request::put($url, $headers, json_encode($params), $options);
     if ($resp->status_code !== 204) {
       throw new Exception($resp->text);
@@ -97,7 +97,7 @@ class ConstructorIO {
     }
   }
 
-  public function track_conversion($term, $autocompleteSection, $kwargs) {
+  public function trackConversion($term, $autocompleteSection, $kwargs) {
     $params = array(
       "term" => $term,
       "autocomplete_section" => $autocompleteSection
@@ -117,7 +117,7 @@ class ConstructorIO {
     }
   }
 
-  public function track_click_through($term, $autocomplete_section, $kwargs) {
+  public function trackClickThrough($term, $autocompleteSection, $kwargs) {
     $params = array(
       "term" => $term,
       "autocomplete_section" => $autocompleteSection
@@ -137,7 +137,7 @@ class ConstructorIO {
     }
   }
 
-  public function track_search($term, $autocomplete_section, $kwargs) {
+  public function trackSearch($term, $autocompleteSection, $kwargs) {
     $params = array(
       "term" => $term,
       "autocomplete_section" => $autocompleteSection

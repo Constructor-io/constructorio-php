@@ -29,127 +29,61 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals($autocompleteKey, $constructor->autocompleteKey);
   }
 
+  /*
+   * The official fake account apiToken is tkmWVnG0xHXPR0XSdRHA
+   * The official fake account acKey is ZqXaOfXuBWD4s3XzCI1q
+   */
+
   public function testACQuery() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/query-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        autocompletes = constructor.query(
-    //            query_str = "a"
-    //        )
-    //        assert autocompletes != None
-    //        assert type(autocompletes) == dict
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    // let's have api token and ac key plox
+    $autocompletes = $constructor->query("a");
+    $this->assertNotNull($autocompletes);
+    $this->assertArrayHasKey("suggestions", $autocompletes);
   }
 
   public function testAdd() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/add-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        resp = constructor.add(
-    //            item_name = "boinkamoinka",
-    //            autocomplete_section = "Search Suggestions"
-    //        )
-    //        assert resp == True
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->add("boinkamoinka", "Search Suggestions");
+    $this->assertTrue($resp);
   }
 
   public function testRemove() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/remove-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        resp = constructor.remove(
-    //            item_name = "racer",
-    //            autocomplete_section = "Search Suggestions"
-    //        )
-    //        assert resp == True
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    // this is live state, folks
+    $resp_add = $constructor->add("foinkadoinkamoinka", "Search Suggestions");
+    $resp = $constructor->remove("foinkadoinkamoinka", "Search Suggestions");
+    $this->assertTrue($resp);
   }
 
   public function testModify() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/modify-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        resp = constructor.modify(
-    //            item_name = "Stanley_Steamer",
-    //            suggested_score = 100,
-    //            autocomplete_section = "Search Suggestions"
-    //        )
-    //        assert resp == True
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->modify("Stanley_Steamer", "Search Suggestions", array("suggested_score" => 100));
+    $this->assertTrue($resp);
   }
 
   public function testConversion() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/conversion-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        resp = constructor.track_conversion(
-    //            term = "Stanley_Steamer",
-    //            autocomplete_section = "Search Suggestions"
-    //        )
-    //        assert resp == True
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->trackConversion("Stanley_Steamer", "Search Suggestions");
+    $this->assertTrue($resp);
   }
 
   public function testSearchNoRes() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/search-noname-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        resp = constructor.track_search(
-    //            term = "Stanley_Steamer",
-    //            num_results = 10,
-    //            autocomplete_section = "Search Suggestions"
-    //        )
-    //        assert resp == True
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions");
+    $this->assertTrue($resp);
   }
 
   public function testSearchRes() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/search-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        resp = constructor.track_search(
-    //            term = "Stanley_Steamer",
-    //            num_results = 10,
-    //            autocomplete_section = "Search Suggestions"
-    //        )
-    //        assert resp == True
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("num_results" => 10));
+    $this->assertTrue($resp);
   }
 
   public function testClickThrough() {
-    //    with vcr.use_cassette("fixtures/ac.cnstrc.com/click-through-success.yaml"):
-    //        constructor = ConstructorIO(
-    //            api_token = "apiToken",
-    //            autocomplete_key = "autocompleteKey",
-    //            protocol = "http",
-    //            host = "ac.cnstrc.com"
-    //        )
-    //        resp = constructor.track_click_through(
-    //            term = "Stanley_Steamer",
-    //            autocomplete_section = "Search Suggestions"
-    //        )
-    //        assert resp == True
+    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->trackClickThrough("Stanley_Steamer", "Search Suggestions");
+    $this->assertTrue($resp);
   }
 }
 
