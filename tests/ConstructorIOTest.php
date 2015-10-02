@@ -1,30 +1,32 @@
 <?php
 
+require_once "src/ConstructorIO.php";
+
 class ConstructorIOTest extends PHPUnit_Framework_TestCase {
 
   public function testEncodesParameters() {
     $constructor = new ConstructorIO("boinka", "doinka");
     $params = array("foo" => array(1,2), "bar" => array("baz" => array("a", "b")));
-    $serialized_params = $constructor->serializeParams($params);
-    $this->assertEqual(serialized_params,"foo=%5B1%2C+2%5D&bar=%7B%27baz%27%3A+%5B%27a%27%2C+%27b%27%5D%7D");
+    $serializedParams = $constructor->serializeParams($params);
+    $this->assertEquals($serializedParams,"foo%5B0%5D=1&foo%5B1%5D=2&bar%5Bbaz%5D%5B0%5D=a&bar%5Bbaz%5D%5B1%5D=b");
   }
 
   public function testCreatesUrlsCorrectly() {
-    //  constructor = ConstructorIO(api_token="boinka", autocomplete_key="a-test-autocomplete-key")
-    //  generated_url = constructor._make_url('v1/test')
-    //  assert generated_url == 'https://ac.cnstrc.com/v1/test?autocomplete_key=a-test-autocomplete-key'
+    $constructor = new ConstructorIO("boinka", "a-test-autocomplete-key");
+    $generatedUrl = $constructor->makeUrl('v1/test');
+    $this->assertEquals($generatedUrl, "https://ac.cnstrc.com/v1/test?autocomplete_key=a-test-autocomplete-key");
   }
 
   public function testSetApiToken() {
-    //  api_token = 'a-test-api-key',
-    //  constructor = ConstructorIO(api_token=api_token, autocomplete_key="boinka")
-    //  assert constructor._api_token == api_token
+    $apiToken = 'a-test-api-key';
+    $constructor = new ConstructorIO($apiToken, "boinka");
+    $this->assertEquals($apiToken, $constructor->apiToken);
   }
 
   public function testSetACKey() {
-    //    autocomplete_key = 'a-test-autocomplete-key'
-    //    constructor = ConstructorIO(autocomplete_key=autocomplete_key, api_token="boinka")
-    //    assert constructor._autocomplete_key == autocomplete_key
+    $autocompleteKey = 'a-test-autocomplete-key';
+    $constructor = new ConstructorIO("boinka", $autocompleteKey);
+    $this->assertEquals($autocompleteKey, $constructor->autocompleteKey);
   }
 
   public function testACQuery() {

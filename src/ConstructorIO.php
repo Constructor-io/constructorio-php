@@ -5,28 +5,26 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 class ConstructorIO {
 
-  private $apiToken;
-  private $autocompleteKey;
-  private $protocol;
-  private $host;
+  public $apiToken;
+  public $autocompleteKey;
+  public $protocol;
+  public $host;
 
-  public function __construct($apiToken, $autocompleteKey, $protocol='http', $host="ac.cnstrc.com") {
+  public function __construct($apiToken, $autocompleteKey, $protocol='https', $host="ac.cnstrc.com") {
     $this->apiToken = $apiToken;
     $this->autocompleteKey = $autocompleteKey;
     $this->protocol = $protocol;
     $this->host = $host;
   }
 
-  // we exercise them in tests, so we make serializeParams and makeUrl public
-
   public function serializeParams($params) {
     // just to make the internal API concordant with other clients
-    return urlencode($params);
+    return http_build_query($params);
   }
 
   public function makeUrl($endpoint, $params=array()) {
     $params["autocomplete_key"] = $this->autocompleteKey;
-    return sprintf("%s://%s/%s?%s", $this->protocol, $this->host, $this->endpoint, $this->serializeParams($params));
+    return sprintf("%s://%s/%s?%s", $this->protocol, $this->host, $endpoint, $this->serializeParams($params));
   }
 
   public function query($queryStr) {
@@ -103,7 +101,7 @@ class ConstructorIO {
     $params = array(
       "term" => $term,
       "autocomplete_section" => $autocompleteSection
-    )
+    );
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/conversion");
     if (!$this->apiToken) {
@@ -123,7 +121,7 @@ class ConstructorIO {
     $params = array(
       "term" => $term,
       "autocomplete_section" => $autocompleteSection
-    )
+    );
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/click_through");
     if (!$this->apiToken) {
@@ -143,7 +141,7 @@ class ConstructorIO {
     $params = array(
       "term" => $term,
       "autocomplete_section" => $autocompleteSection
-    )
+    );
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/search");
     if (!$this->apiToken) {
