@@ -30,12 +30,12 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
   }
 
   /*
-   * The official fake account apiToken is tkmWVnG0xHXPR0XSdRHA
+   * The official fake account apiToken is YSOxV00F0Kk2R0KnPQN8
    * The official fake account acKey is ZqXaOfXuBWD4s3XzCI1q
    */
 
   public function testACQuery() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     // let's have api token and ac key plox
     $autocompletes = $constructor->query("a");
     $this->assertNotNull($autocompletes);
@@ -43,13 +43,13 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testAdd() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->add("boinkamoinka", "Search Suggestions");
     $this->assertTrue($resp);
   }
 
   public function testRemove() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     // this is live state, folks
     $resp_add = $constructor->add("foinkadoinkamoinka", "Search Suggestions");
     $resp = $constructor->remove("foinkadoinkamoinka", "Search Suggestions");
@@ -57,31 +57,31 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testModify() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->modify("Stanley_Steamer", "Search Suggestions", array("suggested_score" => 100));
     $this->assertTrue($resp);
   }
 
   public function testConversion() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->trackConversion("Stanley_Steamer", "Search Suggestions");
     $this->assertTrue($resp);
   }
 
   public function testSearchNoRes() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions");
     $this->assertTrue($resp);
   }
 
   public function testSearchRes() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("num_results" => 10));
     $this->assertTrue($resp);
   }
 
   public function testClickThrough() {
-    $constructor = new ConstructorIO("tkmWVnG0xHXPR0XSdRHA", "acKeyZqXaOfXuBWD4s3XzCI1q");
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->trackClickThrough("Stanley_Steamer", "Search Suggestions");
     $this->assertTrue($resp);
   }
