@@ -1,6 +1,7 @@
 <?php
 
-require('requests');
+// because we are in src/
+require dirname(__DIR__) . '/vendor/autoload.php';
 
 class ConstructorIO {
 
