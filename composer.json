@@ -1,4 +1,8 @@
 {
+    "name": "constructor-io/constructor-io",
+    "type": "library",
+    "description": "PHP Client for Constructor.IO",
+    "keywords", ["constructor", "autocomplete", "commercial"],
     "requre": {
         "rmccue/requests": ">=1.0",
         "phpunit/phpunit": "4.8.*"
