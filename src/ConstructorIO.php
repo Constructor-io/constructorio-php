@@ -17,12 +17,14 @@ class ConstructorIO {
     $this->host = $host;
   }
 
-  private function serializeParams($params) {
+  // we exercise them in tests, so we make serializeParams and makeUrl public
+
+  public function serializeParams($params) {
     // just to make the internal API concordant with other clients
     return urlencode($params);
   }
 
-  private function makeUrl($endpoint, $params=array()) {
+  public function makeUrl($endpoint, $params=array()) {
     $params["autocomplete_key"] = $this->autocompleteKey;
     return sprintf("%s://%s/%s?%s", $this->protocol, $this->host, $this->endpoint, $this->serializeParams($params));
   }
