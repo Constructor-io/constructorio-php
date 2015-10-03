@@ -88,21 +88,32 @@ class ConstructorIO {
   }
 
   public function remove($item_name, $autocompleteSection, $kwargs=array()) {
+    // Extremely stupid because of a flaw in Requests library
     $params = array(
       "item_name" => $item_name,
       "autocomplete_section" => $autocompleteSection,
     );
     $params = array_merge($params, $kwargs);
+    $data = json_encode($params);
     $url = $this->makeUrl("v1/item");
     if (!$this->apiToken) {
       throw new Exception("You must have an API token to use the Remove method!");
     }
-    $headers = array('Content-Type' => 'application/json');
-    $options = array('auth' => array($this->apiToken, ''));
     // the delete api on requests can't have data
-    $resp = Requests::request($url, $headers, json_encode($params), 'DELETE', $options);
-    if ($resp->status_code !== 204) {
-      throw new Exception($resp->body);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_USERPWD, $this->apiToken . ":");
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    $result = json_decode($result);
+    // get the status code
+    if ($httpCode !== 204) {
+      throw new Exception($result);
     } else {
       return true;
     }
