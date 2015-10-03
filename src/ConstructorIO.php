@@ -36,9 +36,9 @@ class ConstructorIO {
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Request::post($url, $headers, "", $options);
     if ($resp->status_code !== 200) {
-      throw new Exception($resp->$body);
+      throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 
@@ -51,9 +51,9 @@ class ConstructorIO {
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Request::post($url, $headers, "", $options);
     if ($resp->status_code !== 200) {
-      throw new Exception($resp->$body);
+      throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 
@@ -63,7 +63,7 @@ class ConstructorIO {
     if ($resp->status_code !== 200) {
       throw new Exception($resp->body);
     } else {
-      return $resp->json;
+      return json_decode($resp->body, true);
     }
   }
 
@@ -83,7 +83,7 @@ class ConstructorIO {
     if ($resp->status_code !== 204) {
       throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 
@@ -99,11 +99,12 @@ class ConstructorIO {
     }
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
-    $resp = Requests::delete($url, $headers, json_encode($params), $options);
+    // the delete api on requests can't have data
+    $resp = Requests::request($url, $headers, json_encode($params), 'DELETE', $options);
     if ($resp->status_code !== 204) {
       throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 
@@ -123,7 +124,7 @@ class ConstructorIO {
     if ($resp->status_code !== 204) {
       throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 
@@ -143,7 +144,7 @@ class ConstructorIO {
     if ($resp->status_code !== 204) {
       throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 
@@ -163,7 +164,7 @@ class ConstructorIO {
     if ($resp->status_code !== 204) {
       throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 
@@ -183,7 +184,7 @@ class ConstructorIO {
     if ($resp->status_code !== 204) {
       throw new Exception($resp->body);
     } else {
-      return True;
+      return true;
     }
   }
 }

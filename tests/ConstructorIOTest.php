@@ -37,28 +37,32 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
   public function testACQuery() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     // let's have api token and ac key plox
-    $autocompletes = $constructor->query("a");
+    $autocompletes = $constructor->query("S");
     $this->assertNotNull($autocompletes);
     $this->assertArrayHasKey("suggestions", $autocompletes);
   }
 
   public function testAdd() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $resp = $constructor->add("boinkamoinka", "Search Suggestions");
+    $randitem = substr(md5(rand()), 0, 7);
+    $resp = $constructor->add($randitem, "Search Suggestions");
     $this->assertTrue($resp);
   }
 
   public function testRemove() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     // this is live state, folks
-    $resp_add = $constructor->add("foinkadoinkamoinka", "Search Suggestions");
-    $resp = $constructor->remove("foinkadoinkamoinka", "Search Suggestions");
+    $randitem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $resp = $constructor->remove($randitem, "Search Suggestions");
     $this->assertTrue($resp);
   }
 
   public function testModify() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $resp = $constructor->modify("Stanley_Steamer", "Search Suggestions", array("suggested_score" => 100));
+    $randitem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $resp = $constructor->modify($randitem, "Search Suggestions", array("suggested_score" => 100));
     $this->assertTrue($resp);
   }
 
