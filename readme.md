@@ -51,7 +51,7 @@ Changing the index
 All of these methods return `true` if successful and raise an `Exception` with a description of what happened if not successful.
 
 To add an item to your autocomplete index:
-    
+
 ```php
 >>> $constructor->add(
 >>>  "boinkamoinka", // item name
@@ -61,7 +61,7 @@ true
 ```
 
 To remove an item from your autocomplete index:
-    
+
 ```php
 >>> $constructor->remove(
 >>>   "boinkamoinka", // item name
@@ -111,7 +111,7 @@ true
 ```
 
 Tracking a conversion event:
-    
+
 ```php
 >>> constructor.trackConversion(
 >>>   "boinkamoinka", // term name
