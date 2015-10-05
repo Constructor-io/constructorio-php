@@ -3,6 +3,22 @@
     "type": "library",
     "description": "PHP Client for Constructor.IO",
     "keywords": ["constructor", "autocomplete", "commercial"],
+    "homepage": "http://constructor.io",
+    "license": "MIT",
+    "authors": [
+    {
+        "name": "Howon Lee",
+        "email": "howon@constructor.io",
+        "homepage": "http://constructor.io",
+        "role": "Developer"
+    },
+    {
+        "name": "Eli Igor Finkelshteyn",
+        "email": "eli@constructor.io",
+        "homepage": "http://constructor.io",
+        "role": "Developer"
+    }
+    ],
     "require": {
         "rmccue/requests": ">=1.0",
         "phpunit/phpunit": "4.8.*"
