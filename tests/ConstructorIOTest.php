@@ -33,6 +33,18 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
    * The official fake account apiToken is YSOxV00F0Kk2R0KnPQN8
    * The official fake account acKey is ZqXaOfXuBWD4s3XzCI1q
    */
+  
+  public function testHealthCheck() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->healthCheck();
+    $this->assertTrue($resp);
+  }
+
+  public function testVerify() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $resp = $constructor->verify();
+    $this->assertTrue($resp);
+  }
 
   public function testACQuery() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
@@ -49,20 +61,53 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $this->assertTrue($resp);
   }
 
+  public function testAddOptional() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $randitem = substr(md5(rand()), 0, 7);
+    $kwargs = array(
+      "suggested_score" => 1337,
+      "keywords" => array("boinka", "doinka", "foinka", "moinka"),
+      "url" => "http://www.boinka.com"
+    );
+    $resp = $constructor->add($randitem, "Search Suggestions", $kwargs);
+    $this->assertTrue($resp);
+  }
+
   public function testRemove() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     // this is live state, folks
     $randitem = substr(md5(rand()), 0, 7);
     $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $this->assertTrue($resp_add);
+    sleep(2); // because item addition may be made async
     $resp = $constructor->remove($randitem, "Search Suggestions");
     $this->assertTrue($resp);
   }
+
+  // no optional params for remove
 
   public function testModify() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $randitem = substr(md5(rand()), 0, 7);
     $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $this->assertTrue($resp_add);
+    sleep(2); // because item addition may be made async
     $resp = $constructor->modify($randitem, "Search Suggestions", array("suggested_score" => 100));
+    $this->assertTrue($resp);
+  }
+
+  public function testModifyOptional() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $randitem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $this->assertTrue($resp_add);
+    sleep(2); // because item addition may be made async
+    $kwargs = array(
+      "suggested_score" => 1337,
+      "keywords" => array("boinka", "doinka", "foinka", "moinka"),
+      "url" => "http://www.boinka.com"
+    );
+    $resp = $constructor->modify($randitem, "Search Suggestions", $kwargs);
     $this->assertTrue($resp);
   }
 
@@ -72,13 +117,22 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $this->assertTrue($resp);
   }
 
-  public function testSearchNoRes() {
+  public function testConversionOptional() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $randitem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $this->assertTrue($resp_add);
+    sleep(2); // because item addition may be made async
+    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("item" => $randitem));
+  }
+  
+  public function testSearch() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions");
     $this->assertTrue($resp);
   }
 
-  public function testSearchRes() {
+  public function testSearchOptional() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("num_results" => 10));
     $this->assertTrue($resp);
@@ -87,6 +141,20 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
   public function testClickThrough() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->trackClickThrough("Stanley_Steamer", "Search Suggestions");
+    $this->assertTrue($resp);
+  }
+
+  public function testClickThroughOptional() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $randitem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $this->assertTrue($resp_add);
+    sleep(2); // because item addition may be made async
+    $kwargs = array(
+      "item" => $randitem,
+      "revenue" => 1337
+    );
+    $resp = $constructor->trackClickThrough("Stanley_Steamer", "Search Suggestions", $kwargs);
     $this->assertTrue($resp);
   }
 }
