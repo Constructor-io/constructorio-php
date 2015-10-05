@@ -65,9 +65,7 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $randitem = substr(md5(rand()), 0, 7);
     $kwargs = array(
-      "suggested_score" => 1337,
-      "keywords" => array("boinka", "doinka", "foinka", "moinka"),
-      "url" => "http://www.boinka.com"
+      "suggested_score" => 1337
     );
     $resp = $constructor->add($randitem, "Search Suggestions", $kwargs);
     $this->assertTrue($resp);
@@ -92,7 +90,7 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $resp_add = $constructor->add($randitem, "Search Suggestions");
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
-    $resp = $constructor->modify($randitem, "Search Suggestions", array("suggested_score" => 100));
+    $resp = $constructor->modify($randitem, $randitem, "Search Suggestions", array("suggested_score" => 100));
     $this->assertTrue($resp);
   }
 
@@ -103,11 +101,9 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
     $kwargs = array(
-      "suggested_score" => 1337,
-      "keywords" => array("boinka", "doinka", "foinka", "moinka"),
-      "url" => "http://www.boinka.com"
+      "suggested_score" => 1337
     );
-    $resp = $constructor->modify($randitem, "Search Suggestions", $kwargs);
+    $resp = $constructor->modify($randitem, $randitem, "Search Suggestions", $kwargs);
     $this->assertTrue($resp);
   }
 

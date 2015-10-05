@@ -34,7 +34,7 @@ class ConstructorIO {
     $url = $this->makeUrl("v1/health_check");
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
-    $resp = Request::post($url, $headers, "", $options);
+    $resp = Requests::get($url, $headers, "", $options);
     if ($resp->status_code !== 200) {
       throw new Exception($resp->body);
     } else {
@@ -47,9 +47,8 @@ class ConstructorIO {
     if (!$this->apiToken) {
       throw new Exception("You must have an API token to verify requests!");
     }
-    $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
-    $resp = Request::post($url, $headers, "", $options);
+    $resp = Requests::get($url, array(), $options);
     if ($resp->status_code !== 200) {
       throw new Exception($resp->body);
     } else {
@@ -119,9 +118,10 @@ class ConstructorIO {
     }
   }
 
-  public function modify($item_name, $autocompleteSection, $kwargs=array()) {
+  public function modify($item_name, $new_item_name, $autocompleteSection, $kwargs=array()) {
     $params = array(
       "item_name" => $item_name,
+      "new_item_name" => $new_item_name,
       "autocomplete_section" => $autocompleteSection,
     );
     $params = array_merge($params, $kwargs);
