@@ -6,7 +6,7 @@ A PHP package for the [Constructor.io API](http://constructor.io/docs).  Constru
 Installation
 ===
 
--- add the composer instructions here when we upload
+    composer require constructor-io/constructor-io
 
 API
 ===
