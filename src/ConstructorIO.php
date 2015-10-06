@@ -1,7 +1,6 @@
 <?php
 
 namespace ConstructorIO;
-// because we are in src/
 
 use Requests;
 
@@ -38,7 +37,7 @@ class ConstructorIO {
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Requests::get($url, $headers, "", $options);
     if ($resp->status_code !== 200) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return true;
     }
@@ -47,12 +46,12 @@ class ConstructorIO {
   public function verify() {
     $url = $this->makeUrl("v1/verify");
     if (!$this->apiToken) {
-      throw new Exception("You must have an API token to verify requests!");
+      throw new ConstructorException("You must have an API token to verify requests!");
     }
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Requests::get($url, array(), $options);
     if ($resp->status_code !== 200) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return true;
     }
@@ -62,7 +61,7 @@ class ConstructorIO {
     $url = $this->makeUrl("autocomplete/" . $queryStr);
     $resp = Requests::get($url);
     if ($resp->status_code !== 200) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return json_decode($resp->body, true);
     }
@@ -76,13 +75,13 @@ class ConstructorIO {
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/item");
     if (!$this->apiToken) {
-      throw new Exception("You must have an API token to use the Add method!");
+      throw new ConstructorException("You must have an API token to use the Add method!");
     }
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Requests::post($url, $headers, json_encode($params), $options);
     if ($resp->status_code !== 204) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return true;
     }
@@ -98,7 +97,7 @@ class ConstructorIO {
     $data = json_encode($params);
     $url = $this->makeUrl("v1/item");
     if (!$this->apiToken) {
-      throw new Exception("You must have an API token to use the Remove method!");
+      throw new ConstructorException("You must have an API token to use the Remove method!");
     }
     // the delete api on requests can't have data
     $ch = curl_init();
@@ -114,7 +113,7 @@ class ConstructorIO {
     $result = json_decode($result);
     // get the status code
     if ($httpCode !== 204) {
-      throw new Exception($result);
+      throw new ConstructorException($result);
     } else {
       return true;
     }
@@ -129,13 +128,13 @@ class ConstructorIO {
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/item");
     if (!$this->apiToken) {
-      throw new Exception("You must have an API token to use the Modify method!");
+      throw new ConstructorException("You must have an API token to use the Modify method!");
     }
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Requests::put($url, $headers, json_encode($params), $options);
     if ($resp->status_code !== 204) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return true;
     }
@@ -149,13 +148,13 @@ class ConstructorIO {
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/conversion");
     if (!$this->apiToken) {
-      throw new Exception("You must have an API token to track conversions!");
+      throw new ConstructorException("You must have an API token to track conversions!");
     }
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Requests::post($url, $headers, json_encode($params), $options);
     if ($resp->status_code !== 204) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return true;
     }
@@ -169,13 +168,13 @@ class ConstructorIO {
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/click_through");
     if (!$this->apiToken) {
-      throw new Exception("You must have an API token to track click-throughs!");
+      throw new ConstructorException("You must have an API token to track click-throughs!");
     }
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Requests::post($url, $headers, json_encode($params), $options);
     if ($resp->status_code !== 204) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return true;
     }
@@ -189,13 +188,13 @@ class ConstructorIO {
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/search");
     if (!$this->apiToken) {
-      throw new Exception("You must have an API token to track searchs!");
+      throw new ConstructorException("You must have an API token to track searchs!");
     }
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
     $resp = Requests::post($url, $headers, json_encode($params), $options);
     if ($resp->status_code !== 204) {
-      throw new Exception($resp->body);
+      throw new ConstructorException($resp->body);
     } else {
       return true;
     }
