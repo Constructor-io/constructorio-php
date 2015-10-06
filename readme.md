@@ -76,11 +76,12 @@ To modify an item in your autocomplete index:
 ```php
 >>> $constructor->modify(
 >>>   "boinkamoinka", // item name
->>>   "boinkadoinka", // new item name (this is required!)
+>>>   "some new name", // new item name (this is required!)
 >>>   "Search Suggestions", // autocomplete section name
 >>>   array("suggested_score" => 100) // array of item properties to modify
 >>> )
 true
+```
 
 Tracking
 ---
