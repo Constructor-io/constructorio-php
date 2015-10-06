@@ -2,7 +2,8 @@
 
 namespace ConstructorIO;
 // because we are in src/
-// require dirname(__DIR__) . '/vendor/autoload.php';
+
+use Requests;
 
 class ConstructorIO {
 
