@@ -19,7 +19,8 @@ Usage
 Create a new instance with your API token and autocomplete key:
 
 ```php
-require_once "ConstructorIO"
+use ConstructorIO\ConstructorIO;
+
 $constructor = new ConstructorIO("your API token","your autocomplete key")
 # both of these are available at https://constructor.io/dashboard
 ```
