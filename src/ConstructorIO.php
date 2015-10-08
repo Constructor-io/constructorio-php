@@ -39,7 +39,7 @@ class ConstructorIO {
     if ($resp->status_code !== 200) {
       throw new ConstructorException($resp->body);
     } else {
-      return true;
+      return $resp->body;
     }
   }
 
@@ -53,7 +53,7 @@ class ConstructorIO {
     if ($resp->status_code !== 200) {
       throw new ConstructorException($resp->body);
     } else {
-      return true;
+      return $resp->body;
     }
   }
 
