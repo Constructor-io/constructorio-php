@@ -22,7 +22,7 @@ Create a new instance with your API token and autocomplete key:
 use ConstructorIO\ConstructorIO;
 
 $constructor = new ConstructorIO("your API token","your autocomplete key")
-# both of these are available at https://constructor.io/dashboard
+// both of these are available at https://constructor.io/dashboard
 ```
 
 If you ONLY want to query, then you can put in `""` for `apiToken`.
@@ -38,13 +38,13 @@ To query the autocomplete from your backend:
 $suggestions = $constructor->query("a");
 $suggestions
 
->>> array(
->>>   "suggestions" => array(
->>>     array("value"=> "ambulance"),
->>>     array("value"=> "aardvark"),
->>>     array("value"=> "Aachen")
->>>   )
->>> )
+// array(
+//   "suggestions" => array(
+//     array("value"=> "ambulance"),
+//     array("value"=> "aardvark"),
+//     array("value"=> "Aachen")
+//   )
+// )
 ```
 
 Changing the index
@@ -56,10 +56,10 @@ To add an item to your autocomplete index:
 
 ```php
 $constructor->add(
- "boinkamoinka", // item name
- "Search Suggestions" // autocomplete section name
+  "boinkamoinka", // item name
+  "Search Suggestions" // autocomplete section name
 );
->>> true
+// true
 ```
 
 To remove an item from your autocomplete index:
@@ -69,7 +69,7 @@ $constructor->remove(
   "boinkamoinka", // item name
   "Search Suggestions" // autocomplete section name
 );
->>> true
+// true
 ```
 
 To modify an item in your autocomplete index:
@@ -81,7 +81,7 @@ $constructor->modify(
   "Search Suggestions", // autocomplete section name
   array("suggested_score" => 100) // array of item properties to modify
 );
->>> true
+// true
 ```
 
 Tracking
@@ -99,28 +99,28 @@ $constructor->trackSearch(
   "Search Suggestions", // autocomplete section name
   array("num_results" => 200) // array of properties of the search
 );
->>> true
+// true
 ```
 
 Tracking a click-through event:
 
 ```php
-constructor.trackClickThrough(
+$constructor.trackClickThrough(
   "boinkamoinka", // term name
   "Search Suggestions", // autocomplete section name
   array("num_results" => 200) // array of properties of the click through
 );
->>> true
+// true
 ```
 
 Tracking a conversion event:
 
 ```php
-constructor.trackConversion(
+$constructor.trackConversion(
   "boinkamoinka", // term name
   "Search Suggestions", // autocomplete section name
   array("num_results" => 200) // array of properties of the conversion
 );
->>> true
+// true
 ```
 
