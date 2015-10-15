@@ -180,10 +180,9 @@ class ConstructorIO {
     }
   }
 
-  public function trackSearch($term, $autocompleteSection, $kwargs=array()) {
+  public function trackSearch($term, $kwargs=array()) {
     $params = array(
-      "term" => $term,
-      "autocomplete_section" => $autocompleteSection
+      "term" => $term
     );
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/search");
