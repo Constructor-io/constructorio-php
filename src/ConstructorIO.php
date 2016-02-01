@@ -67,21 +67,22 @@ class ConstructorIO {
     }
   }
 
-  public function batch_add($items, autocompleteSection) {
+  public function addBatch($items, $autocompleteSection) {
+    $url = $this->makeUrl("v1/batch_items");
     $params = array(
       "items" => $items,
       "autocomplete_section" => $autocompleteSection,
     );
-    if (!$this->apiToken) {¬
-      throw new ConstructorException("You must have an API token to use the Add method!");¬
+    if (!$this->apiToken) {
+      throw new ConstructorException("You must have an API token to use the Add method!");
     }
-    $headers = array('Content-Type' => 'application/json');¬
-    $options = array('auth' => array($this->apiToken, ''));¬
-    $resp = Requests::post($url, $headers, json_encode($params), $options);¬
-    if ($resp->status_code !== 204) {¬
-      throw new ConstructorException($resp->body);¬
-    } else {¬
-      return true;¬
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this->apiToken, ''));
+    $resp = Requests::post($url, $headers, json_encode($params), $options);
+    if ($resp->status_code !== 204) {
+      throw new ConstructorException($resp->body);
+    } else {
+      return true;
     }
   }
 
