@@ -62,6 +62,21 @@ $constructor->add(
 // true
 ```
 
+To bulk add items to your autocomplete index:
+
+```php
+$randItems = array(¬
+   array("item_name" => "item1", "suggested_score" => 15,¬
+         "url" => "/some/url1"),¬
+   array("item_name" => "item2", "suggested_score" => 17,¬
+         "url" => "/some/url2", "image_url" => "/some/image2"),¬
+   array("item_name" => "item3", "url" => "/some/url3",¬
+         "image_url" => "/some/image3")¬
+);¬
+$constructor->addBatch($randItems, "Products");
+// true
+```
+
 To remove an item from your autocomplete index:
 
 ```php
