@@ -1,6 +1,7 @@
 <?php
 
 require_once "src/ConstructorIO.php";
+use ConstructorIO\ConstructorIO;
 
 class ConstructorIOTest extends PHPUnit_Framework_TestCase {
 
@@ -56,29 +57,49 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
 
   public function testAdd() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $randitem = substr(md5(rand()), 0, 7);
-    $resp = $constructor->add($randitem, "Search Suggestions");
+    $randItem = substr(md5(rand()), 0, 7);
+    $resp = $constructor->add($randItem, "Search Suggestions");
+    $randItem2 = substr(md5(rand()), 0, 7);
+    $params = array("id" => $randItem2, "url" => "/some/url/for/" . $randItem2);
+    $resp = $constructor->add($randItem2, "Products", $params);
+    $this->assertTrue($resp);
+  }
+
+  public function testAddBatch() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $item1 = substr(md5(rand()), 0, 7);
+    $item2 = substr(md5(rand()), 0, 7);
+    $item3 = substr(md5(rand()), 0, 7);
+    $randItems = array(
+      array("item_name" => $item1, "suggested_score" => 15,
+            "url" => "/some/url1"),
+      array("item_name" => $item2, "suggested_score" => 17,
+            "url" => "/some/url2", "image_url" => "/some/image2"),
+      array("item_name" => $item3, "url" => "/some/url3",
+            "image_url" => "/some/image3")
+    );
+    $resp = $constructor->addBatch($randItems, "Products");
     $this->assertTrue($resp);
   }
 
   public function testAddOptional() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $randitem = substr(md5(rand()), 0, 7);
+    $randItem = substr(md5(rand()), 0, 7);
     $kwargs = array(
       "suggested_score" => 1337
     );
-    $resp = $constructor->add($randitem, "Search Suggestions", $kwargs);
+    $resp = $constructor->add($randItem, "Search Suggestions", $kwargs);
     $this->assertTrue($resp);
   }
 
   public function testRemove() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     // this is live state, folks
-    $randitem = substr(md5(rand()), 0, 7);
-    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $randItem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randItem, "Search Suggestions");
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
-    $resp = $constructor->remove($randitem, "Search Suggestions");
+    $resp = $constructor->remove($randItem, "Search Suggestions");
     $this->assertTrue($resp);
   }
 
@@ -86,24 +107,24 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
 
   public function testModify() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $randitem = substr(md5(rand()), 0, 7);
-    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $randItem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randItem, "Search Suggestions");
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
-    $resp = $constructor->modify($randitem, $randitem, "Search Suggestions", array("suggested_score" => 100));
+    $resp = $constructor->modify($randItem, $randItem, "Search Suggestions", array("suggested_score" => 100));
     $this->assertTrue($resp);
   }
 
   public function testModifyOptional() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $randitem = substr(md5(rand()), 0, 7);
-    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $randItem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randItem, "Search Suggestions");
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
     $kwargs = array(
       "suggested_score" => 1337
     );
-    $resp = $constructor->modify($randitem, $randitem, "Search Suggestions", $kwargs);
+    $resp = $constructor->modify($randItem, $randItem, "Search Suggestions", $kwargs);
     $this->assertTrue($resp);
   }
 
@@ -115,11 +136,11 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
 
   public function testConversionOptional() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $randitem = substr(md5(rand()), 0, 7);
-    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $randItem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randItem, "Search Suggestions");
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
-    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("item" => $randitem));
+    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("item" => $randItem));
   }
   
   public function testSearch() {
@@ -142,12 +163,12 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
 
   public function testClickThroughOptional() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $randitem = substr(md5(rand()), 0, 7);
-    $resp_add = $constructor->add($randitem, "Search Suggestions");
+    $randItem = substr(md5(rand()), 0, 7);
+    $resp_add = $constructor->add($randItem, "Search Suggestions");
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
     $kwargs = array(
-      "item" => $randitem,
+      "item" => $randItem,
       "revenue" => 1337
     );
     $resp = $constructor->trackClickThrough("Stanley_Steamer", "Search Suggestions", $kwargs);
