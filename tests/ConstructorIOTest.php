@@ -59,6 +59,9 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $randItem = substr(md5(rand()), 0, 7);
     $resp = $constructor->add($randItem, "Search Suggestions");
+    $randItem2 = substr(md5(rand()), 0, 7);
+    $params = array("id" => $randItem2, "url" => "/some/url/for/" . $randItem2);
+    $resp = $constructor->add($randItem2, "Products", $params);
     $this->assertTrue($resp);
   }
 
