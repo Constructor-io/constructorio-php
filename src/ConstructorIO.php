@@ -33,9 +33,7 @@ class ConstructorIO {
 
   public function healthCheck() {
     $url = $this->makeUrl("v1/health_check");
-    $headers = array('Content-Type' => 'application/json');
-    $options = array('auth' => array($this->apiToken, ''));
-    $resp = Requests::get($url, $headers, "", $options);
+    $resp = Requests::get($url);
     if ($resp->status_code !== 200) {
       throw new ConstructorException($resp->body);
     } else {

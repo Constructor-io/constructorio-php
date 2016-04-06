@@ -38,13 +38,15 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
   public function testHealthCheck() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->healthCheck();
-    $this->assertTrue($resp);
+    $resp_json = json_decode($resp, true);
+    $this->assertTrue($resp_json["is_up"]);
   }
 
   public function testVerify() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $resp = $constructor->verify();
-    $this->assertTrue($resp);
+    $resp_json = json_decode($resp, true);
+    $this->assertEquals($resp_json["message"], "successful authentication");
   }
 
   public function testACQuery() {
@@ -52,7 +54,8 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     // let's have api token and ac key plox
     $autocompletes = $constructor->query("S");
     $this->assertNotNull($autocompletes);
-    $this->assertArrayHasKey("suggestions", $autocompletes);
+    $this->assertArrayHasKey("sections", $autocompletes);
+    $this->assertArrayHasKey("Search Suggestions", $autocompletes["sections"]);
   }
 
   public function testAdd() {
@@ -60,8 +63,9 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $randItem = substr(md5(rand()), 0, 7);
     $resp = $constructor->add($randItem, "Search Suggestions");
     $randItem2 = substr(md5(rand()), 0, 7);
-    $params = array("id" => $randItem2, "url" => "/some/url/for/" . $randItem2);
-    $resp = $constructor->add($randItem2, "Products", $params);
+    $params = array("id" => $randItem2, "url" => "/some/url/for/" . $randItem2, "custome_param" => "blah",
+                    "description" => "Привет! test description", "keywords" => array("w1", "w2"));
+    $resp = $constructor->add("Привет" . $randItem2, "Products", $params);
     $this->assertTrue($resp);
   }
 
@@ -140,18 +144,18 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $resp_add = $constructor->add($randItem, "Search Suggestions");
     $this->assertTrue($resp_add);
     sleep(2); // because item addition may be made async
-    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("item" => $randItem));
+    $resp = $constructor->trackSearch("Stanley_Steamer", array("item" => $randItem));
   }
   
   public function testSearch() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions");
+    $resp = $constructor->trackSearch("Stanley_Steamer");
     $this->assertTrue($resp);
   }
 
   public function testSearchOptional() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
-    $resp = $constructor->trackSearch("Stanley_Steamer", "Search Suggestions", array("num_results" => 10));
+    $resp = $constructor->trackSearch("Stanley_Steamer", array("num_results" => 10));
     $this->assertTrue($resp);
   }
 
