@@ -58,6 +58,44 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $this->assertArrayHasKey("Search Suggestions", $autocompletes["sections"]);
   }
 
+  public function testAddOrUpdate() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $randItem = substr(md5(rand()), 0, 7);
+    $resp = $constructor->addOrUpdate($randItem, "Search Suggestions");
+    $randItem2 = substr(md5(rand()), 0, 7);
+    $params = array("id" => $randItem2, "url" => "/some/url/for/" . $randItem2, "custome_param" => "blah",
+                    "description" => "Привет! test description", "keywords" => array("w1", "w2"));
+    $resp = $constructor->addOrUpdate("Привет" . $randItem2, "Products", $params);
+    $this->assertTrue($resp);
+    $params["descriptions"] = "blah";
+    $resp = $constructor->addOrUpdate("Привет" . $randItem2, "Products", $params);
+    $this->assertTrue($resp);
+    $resp = $constructor->addOrUpdate("some new name", "Products", $params);
+    $this->assertTrue($resp);
+  }
+
+  public function testAddOrUpdateBatch() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    $item1 = substr(md5(rand()), 0, 7);
+    $item2 = substr(md5(rand()), 0, 7);
+    $item3 = substr(md5(rand()), 0, 7);
+    $randItems = array(
+      array("item_name" => $item1, "suggested_score" => 15,
+            "url" => "/some/url1"),
+      array("item_name" => $item2, "suggested_score" => 17,
+            "url" => "/some/url2", "image_url" => "/some/image2"),
+      array("item_name" => $item3, "url" => "/some/url3",
+            "image_url" => "/some/image3")
+    );
+    $resp = $constructor->addOrUpdateBatch($randItems, "Products");
+    $this->assertTrue($resp);
+    $randItems[1]["suggested_score"] = 50;
+    $randItems[2]["image_url"] = "/some/other/image";
+    $randItems[3]["url"] = "/some/new/url";
+    $resp = $constructor->addOrUpdateBatch($randItems, "Products");
+    $this->assertTrue($resp);
+  }
+
   public function testAdd() {
     $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
     $randItem = substr(md5(rand()), 0, 7);
