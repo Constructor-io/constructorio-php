@@ -89,9 +89,9 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     );
     $resp = $constructor->addOrUpdateBatch($randItems, "Products");
     $this->assertTrue($resp);
-    $randItems[1]["suggested_score"] = 50;
-    $randItems[2]["image_url"] = "/some/other/image";
-    $randItems[3]["url"] = "/some/new/url";
+    $randItems[0]["suggested_score"] = 50;
+    $randItems[1]["image_url"] = "/some/other/image";
+    $randItems[2]["url"] = "/some/new/url";
     $resp = $constructor->addOrUpdateBatch($randItems, "Products");
     $this->assertTrue($resp);
   }
