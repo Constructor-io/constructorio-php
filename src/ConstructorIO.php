@@ -112,7 +112,7 @@ class ConstructorIO {
     $params = array_merge($params, $kwargs);
     $url = $this->makeUrl("v1/item", array("force" => 1));
     if (!$this->apiToken) {
-      throw new ConstructorException("You must have an API token to use the Add method!");
+      throw new ConstructorException("You must have an API token to use the addOrUpdate method!");
     }
     $headers = array('Content-Type' => 'application/json');
     $options = array('auth' => array($this->apiToken, ''));
@@ -143,6 +143,38 @@ class ConstructorIO {
        return true;
     }
  }
+
+  public function removeBatch($items, $autocompleteSection) {
+    $url = $this->makeUrl("v1/batch_items");
+    $params = array(
+      "items" => $items,
+      "autocomplete_section" => $autocompleteSection,
+    );
+    $data = json_encode($params);
+    if (!$this->apiToken) {
+      throw new ConstructorException("You must have an API token to use the removeBatch method!");
+    }
+    $headers = array('Content-Type' => 'application/json');
+    $options = array('auth' => array($this->apiToken, ''));
+    // the delete api on requests can't have data
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_USERPWD, $this->apiToken . ":");
+    $result = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    $result = json_decode($result);
+    // get the status code
+    if ($httpCode !== 204) {
+      throw new ConstructorException($result);
+    } else {
+      return true;
+    }
+  }
 
   public function remove($item_name, $autocompleteSection, $kwargs=array()) {
     // Extremely stupid because of a flaw in Requests library

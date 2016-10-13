@@ -145,6 +145,26 @@ class ConstructorIOTest extends PHPUnit_Framework_TestCase {
     $this->assertTrue($resp);
   }
 
+  public function testRemoveBatch() {
+    $constructor = new ConstructorIO("YSOxV00F0Kk2R0KnPQN8", "ZqXaOfXuBWD4s3XzCI1q");
+    // this is live state, folks
+    $item1 = substr(md5(rand()), 0, 7);
+    $item2 = substr(md5(rand()), 0, 7);
+    $item3 = substr(md5(rand()), 0, 7);
+    $randItems = array(
+      array("item_name" => $item1, "suggested_score" => 15,
+            "url" => "/some/url1"),
+      array("item_name" => $item2, "suggested_score" => 17,
+            "url" => "/some/url2", "image_url" => "/some/image2"),
+      array("item_name" => $item3, "url" => "/some/url3",
+            "image_url" => "/some/image3")
+    );
+    $resp_add = $constructor->addBatch($randItems, "Products");
+    $this->assertTrue($resp_add);
+    $resp_del = $constructor->removeBatch($randItems, "Products");
+    $this->assertTrue($resp_del);
+  }
+
   // no optional params for remove
 
   public function testModify() {
